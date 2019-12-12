@@ -22,7 +22,7 @@ try:
   # cap = cv2.VideoCapture("tcp://192.168.178.25:5001/")
   cap = cv2.VideoCapture()
   cap.set(cv2.CAP_PROP_BUFFERSIZE,3)
-  cap.open("tcp://192.168.178.25:5001/")
+  cap.open("tcp://{}:5001/".format(ip))
 except Exception as e:
   print(str(e))
 #Main program loop:
