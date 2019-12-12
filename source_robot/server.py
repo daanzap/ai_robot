@@ -38,7 +38,7 @@ def main_robot_control(q_out):
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # bind the socket to a public host, and a well-known port
     print(get_ip())
-    serversocket.bind((get_ip(), 9999))
+    serversocket.bind(('', 9999))
     # become a server socket
     serversocket.listen(5)
     while True:
