@@ -33,8 +33,7 @@ green = (0,255,0)
 black = (0,0,0)
 white = (255,255,255)
 screen.fill(white)
-
-
+s = None
 robot_selected = False
 
 connection_in_progress = False
@@ -58,6 +57,7 @@ def find_robots(out_q):
 def connect_to_robot(robot_info):
     global connection_in_progress
     global robot_selected
+    global s
     if not connection_in_progress:
         connection_in_progress = True
         print('connection to {}'.format(robot_info['name']))
@@ -66,9 +66,6 @@ def connect_to_robot(robot_info):
         s.connect((robot_info['ip'], 9999))
         s.send('connection request'.encode('utf-8'))
         robot_response = s.recv(1024)
-        print(robot_response)
-        robot_response = s.recv(1024)
-        print(robot_response)
         if robot_response == b'connection ok':
             q2.put('connection ok')
             robot_selected = True
@@ -158,6 +155,23 @@ while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
+    keys = pygame.key.get_pressed()
+    any_control_key_pressed = False
+    if keys[pygame.K_LEFT]:
+        any_control_key_pressed = True
+        s.send('robot_command:turn_left')
+    if keys[pygame.K_RIGHT]:
+        any_control_key_pressed = True
+        s.send('robot_command:turn_left')
+    if keys[pygame.K_UP]:
+        any_control_key_pressed = True
+        s.send('robot_command:forward')
+    if keys[pygame.K_DOWN]:
+        any_control_key_pressed = True
+        s.send('robot_command:backward')
+
+    if not any_control_key_pressed:
+        s.send('robot_command:all_stop')
 
     valid, frame = cap.read()
     if valid:
