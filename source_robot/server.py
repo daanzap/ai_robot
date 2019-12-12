@@ -47,7 +47,7 @@ def main_robot_control(q_out):
         c.send('Connecting with {}'.format(robot_name).encode('utf-8'))
         message = c.recv(1024)
         # message = 'Got connection from {}'.format(addr)
-        if message == 'connection request':
+        if message == b'connection request':
             print('sending back')
             c.send('thanxs for the connection')
         q_out.put(message)
