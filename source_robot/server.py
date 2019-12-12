@@ -46,7 +46,8 @@ def main_robot_control(q_out):
         print('Got connection from {}'.format(addr))
         c.send('Connecting with {}'.format(robot_name).encode('utf-8'))
         message = c.recv(1024)
-        message = 'Got connection from {}'.format(addr)
+        # message = 'Got connection from {}'.format(addr)
+        print(message)
         q_out.put(message)
 
 
