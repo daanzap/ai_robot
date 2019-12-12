@@ -79,6 +79,7 @@ def main_robot_control(q_motor_control):
         c, addr = serversocket.accept()
         message = c.recv(1024)
         # message = 'Got connection from {}'.format(addr)
+        print(message)
         if message == b'connection request' and proc_id is None:
             proc_id = subprocess.Popen(["raspivid","-v","-w","640", "-h", "480", "-fps","30","-n","-t", "0", "-l", "-o", "tcp://0.0.0.0:5001"])
             time.sleep(4)

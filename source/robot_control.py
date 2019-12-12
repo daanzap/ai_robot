@@ -159,19 +159,19 @@ while True:
     any_control_key_pressed = False
     if keys[pygame.K_LEFT]:
         any_control_key_pressed = True
-        s.send('robot_command:turn_left')
+        s.send(b'robot_command:turn_left')
     if keys[pygame.K_RIGHT]:
         any_control_key_pressed = True
-        s.send('robot_command:turn_left')
+        s.send(b'robot_command:turn_left')
     if keys[pygame.K_UP]:
         any_control_key_pressed = True
-        s.send('robot_command:forward')
+        s.send(b'robot_command:forward')
     if keys[pygame.K_DOWN]:
         any_control_key_pressed = True
-        s.send('robot_command:backward')
+        s.send(b'robot_command:backward')
 
     if not any_control_key_pressed:
-        s.send('robot_command:all_stop')
+        s.send(b'robot_command:all_stop')
 
     valid, frame = cap.read()
     if valid:
