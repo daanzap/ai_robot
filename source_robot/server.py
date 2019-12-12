@@ -31,10 +31,11 @@ dest = ('<broadcast>', 10100)
 
 while True:
     print(msg)
+
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+    s.setblocking(0)
     s.sendto(msg, dest)
-    s.listen(1)
     s.settimeout(1)
     data = s.recv(1024)
     print(data)
