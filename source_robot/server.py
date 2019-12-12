@@ -49,7 +49,7 @@ def main_robot_control(q_out):
         # message = 'Got connection from {}'.format(addr)
         if message == b'connection request':
             print('sending back')
-            c.send('thanxs for the connection')
+            c.send('thanxs for the connection'.encode('utf-8'))
         q_out.put(message)
 
 
