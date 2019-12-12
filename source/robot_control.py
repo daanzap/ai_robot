@@ -62,7 +62,9 @@ def connect_to_robot(robot_info):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # now connect to the web server on port 80 - the normal http port
         s.connect((robot_info['ip'], 9999))
-        s.send('test send'.encode('utf-8'))
+        s.send('connection request'.encode('utf-8'))
+        robot_response = s.recv(1024)
+        print(robot_response)
         connection_in_progress = False
 
 
