@@ -37,11 +37,9 @@ screen.fill(white)
 robot_selected = False
 
 connection_in_progress = False
-s = None
 
 def find_robots(out_q):
     """connect to one of the robots"""
-    global s
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.bind(('', 10100))
     robots_broadcasting = {}
@@ -61,8 +59,10 @@ def connect_to_robot(robot_info):
     if not connection_in_progress:
         connection_in_progress = True
         print('connection to {}'.format(robot_info['name']))
-        dest = (robot_info['ip'], 10100)
-        s.sendto('test send'.encode('utf-8'),dest)
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # now connect to the web server on port 80 - the normal http port
+        s.connect((robot_info['ip'], 9999))
+        s.send('test send'.encode('utf-8'))
         connection_in_progress = False
 
 
