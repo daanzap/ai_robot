@@ -34,5 +34,7 @@ while True:
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
     s.sendto(msg, dest)
+    data = s.recv()
+    print(data)
     time.sleep(1)
 
