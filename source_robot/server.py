@@ -32,7 +32,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
 
 
-q = Queue
+q = Queue()
 
 def main_robot_control(q_out):
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
