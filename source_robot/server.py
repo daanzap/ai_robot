@@ -49,6 +49,7 @@ q = Queue()
 q_motor_control = Queue()
 
 def motor_control_thread(q_in):
+    print('starting motor control thread')
     motor = MotorControl()
     commands = {
         'forward': motor.forward,
@@ -59,7 +60,9 @@ def motor_control_thread(q_in):
 
     }
     previous_command = ''
+
     while True:
+        print('in motor control thread')
         command = q_in.get()
         print(command)
         if command != previous_command:
@@ -70,7 +73,7 @@ def motor_control_thread(q_in):
 motor_control = Thread(target=motor_control_thread, args=(q_motor_control,),daemon=True)
 motor_control.start()
 
-def main_robot_control(q_motor_control):
+def main_robot_control(q_out):
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # bind the socket to a public host, and a well-known port
     print(get_ip())
@@ -89,7 +92,7 @@ def main_robot_control(q_motor_control):
             c.send('connection ok'.encode('utf-8'))
         if message.startswith(b'robot_command'):
             command = str(message).split(':')
-            q_motor_control.put(command[1])
+            q_out.put(command[1])
 
 
 
