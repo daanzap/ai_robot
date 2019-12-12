@@ -1,5 +1,6 @@
 import time  # import the time module
 import piplates.MOTORplate as MOTOR  # import the MOTORplate module
+import inspect
 
 
 class MotorControl(object):
@@ -26,29 +27,36 @@ class MotorControl(object):
         self.move_track(self.RIGHT_TRACK, direction=self.BACKWARD, speed=speed)
 
     def forward(self):
+        print(inspect.stack()[0][3])
         self.left_forward()
         self.right_forward(
         )
 
     def backward(self):
+        print(inspect.stack()[0][3])
         self.left_backward()
         self.right_backward()
 
     def turn_left(self):
+        print(inspect.stack()[0][3])
         self.left_backward()
         self.right_forward()
 
     def turn_right(self):
+        print(inspect.stack()[0][3])
         self.right_backward()
         self.left_forward()
 
     def left_stop(self):
+        print(inspect.stack()[0][3])
         MOTOR.dcSTOP(0, self.LEFT_TRACK)
 
     def right_stop(self):
+        print(inspect.stack()[0][3])
         MOTOR.dcSTOP(0, self.RIGHT_TRACK)
 
     def all_stop(self):
+        print(inspect.stack()[0][3])
         self.left_stop()
         self.right_stop()
 
