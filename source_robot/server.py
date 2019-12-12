@@ -44,7 +44,7 @@ def main_robot_control(q_out):
     while True:
         c, addr = serversocket.accept()
         print('Got connection from {}'.format(addr))
-        c.send('Connecting with {}'.format(robot_name))
+        c.send('Connecting with {}'.format(robot_name).encode('utf-8'))
         message = c.recv(1024)
         q.put(message)
 
