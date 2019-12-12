@@ -7,7 +7,7 @@ from threading import Thread
 import subprocess
 robot_name = 'robat'
 
-from .robot_motor_control import MotorControl
+from robot_motor_control import MotorControl
 
 # raspivid -v -w 640 -h 480 -fps 30 -n -t 0 -l -o tcp://0.0.0.0:5001
 def get_ip():
