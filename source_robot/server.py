@@ -52,6 +52,7 @@ main_server = Thread(target=main_robot_control, args=(q,), daemon=True)
 main_server.start()
 data = 'no data yet'
 while True:
+    time.sleep(1)
     print(msg)
     s.setblocking(0)
     s.sendto(msg, dest)
