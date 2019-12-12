@@ -160,8 +160,6 @@ def send_command(robot_info, command):
     if command == previous_command:
         return
     previous_command = command
-    print(command)
-    print('connection to {}'.format(robot_info['name']))
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # now connect to the web server on port 80 - the normal http port
     server_socket.connect((robot_info['ip'], 9999))

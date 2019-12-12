@@ -8,22 +8,23 @@ class MotorControl(object):
     BACKWARD = 'cw'
     LEFT_TRACK = 2
     RIGHT_TRACK = 1
+    SPEED = 80
 
     def move_track(self, motor_number, direction, speed):
         MOTOR.dcSTOP(0, motor_number)
         MOTOR.dcCONFIG(0, motor_number, direction, speed, 0)
         MOTOR.dcSTART(0, motor_number)
 
-    def left_forward(self, speed=50.0):
+    def left_forward(self, speed=SPEED):
         self.move_track(self.LEFT_TRACK, direction=self.FORWARD, speed=speed)
 
-    def right_forward(self, speed=50.0):
+    def right_forward(self, speed=SPEED):
         self.move_track(self.RIGHT_TRACK, direction=self.FORWARD, speed=speed)
 
-    def left_backward(self, speed=50.0):
+    def left_backward(self, speed=SPEED):
         self.move_track(self.LEFT_TRACK, direction=self.BACKWARD, speed=speed)
 
-    def right_backward(self, speed=50.0):
+    def right_backward(self, speed=SPEED):
         self.move_track(self.RIGHT_TRACK, direction=self.BACKWARD, speed=speed)
 
     def forward(self):
