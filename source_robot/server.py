@@ -28,7 +28,7 @@ msg = json.dumps(msg).encode('utf-8')
 dest = ('<broadcast>', 10100)
 
 
-
+data = 'no data yet'
 while True:
     print(msg)
 
@@ -36,7 +36,11 @@ while True:
     s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
     s.setblocking(0)
     s.sendto(msg, dest)
-    s.settimeout(1)
-    data = s.recv(1024)
+    try:
+        s.settimeout(1)
+        data = s.recv(1024)
+
+    except Exception as e:
+        print(e)
     print(data)
 
