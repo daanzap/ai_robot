@@ -62,7 +62,7 @@ def motor_control_thread(q_in):
     while True:
         command = q_in.get()
         if command != previous_command:
-            commands[command]()
+            commands[str(command)]()
             previous_command = command
 
 
