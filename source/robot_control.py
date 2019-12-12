@@ -26,6 +26,7 @@ previousImage = ""
 image = ""
 robots_broadcasting = {}
 q = Queue()
+q2 = Queue()
 clock = Clock()
 red = (255,0,0)
 green = (0,255,0)
@@ -56,6 +57,7 @@ def find_robots(out_q):
 
 def connect_to_robot(robot_info):
     global connection_in_progress
+    global robot_selected
     if not connection_in_progress:
         connection_in_progress = True
         print('connection to {}'.format(robot_info['name']))
@@ -65,6 +67,11 @@ def connect_to_robot(robot_info):
         s.send('connection request'.encode('utf-8'))
         robot_response = s.recv(1024)
         print(robot_response)
+        robot_response = s.recv(1024)
+        print(robot_response)
+        if robot_response == b'connection ok':
+            q2.put('connection ok')
+            robot_selected = True
         connection_in_progress = False
 
 
@@ -92,6 +99,11 @@ def select_robot():
     polling_thread.start()
     robot_data = None
     while True:
+        try:
+            if q2.get_nowait() == 'connection ok':
+                break
+        except Exception as e:
+            pass
         clock.tick(60)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:

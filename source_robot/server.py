@@ -4,7 +4,7 @@ import socket
 import time
 from queue import Queue
 from threading import Thread
-
+import subprocess
 robot_name = 'robat'
 
 # raspivid -v -w 640 -h 480 -fps 30 -n -t 0 -l -o tcp://0.0.0.0:5001
@@ -48,8 +48,9 @@ def main_robot_control(q_out):
         message = c.recv(1024)
         # message = 'Got connection from {}'.format(addr)
         if message == b'connection request':
-            print('sending back')
-            c.send('thanxs for the connection'.encode('utf-8'))
+            subprocess.Popen('raspivid -v -w 640 -h 480 -fps 30 -n -t 0 -l -o tcp://0.0.0.0:5001')
+            c.send('connection ok'.encode('utf-8'))
+
         q_out.put(message)
 
 
