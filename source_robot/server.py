@@ -65,7 +65,8 @@ def motor_control_thread(q_in):
             commands[str(command)]()
             previous_command = command
 
-
+motor_control = Thread(target=motor_control_thread, args=(q_motor_control,),daemon=True)
+motor_control.start()
 
 def main_robot_control(q_motor_control):
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
