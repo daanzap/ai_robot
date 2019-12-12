@@ -51,7 +51,7 @@ q_motor_control = Queue()
 def motor_control_thread(q_in):
     motor = MotorControl()
     commands = {
-        'forward':motor.forward,
+        'forward': motor.forward,
         'turn_left': motor.turn_left,
         'turn_right': motor.turn_right,
         'backward': motor.backward,
@@ -64,7 +64,7 @@ def motor_control_thread(q_in):
 
         if command != previous_command:
             print(command)
-            commands[str(command)]()
+            commands[str(command)][:-1]()
             previous_command = command
 
 motor_control = Thread(target=motor_control_thread, args=(q_motor_control,),daemon=True)
