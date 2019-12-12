@@ -33,7 +33,7 @@ green = (0,255,0)
 black = (0,0,0)
 white = (255,255,255)
 screen.fill(white)
-s = None
+server_socket = None
 robot_selected = False
 
 connection_in_progress = False
@@ -57,15 +57,15 @@ def find_robots(out_q):
 def connect_to_robot(robot_info):
     global connection_in_progress
     global robot_selected
-    global s
+    global server_socket
     if not connection_in_progress:
         connection_in_progress = True
         print('connection to {}'.format(robot_info['name']))
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # now connect to the web server on port 80 - the normal http port
-        s.connect((robot_info['ip'], 9999))
-        s.send('connection request'.encode('utf-8'))
-        robot_response = s.recv(1024)
+        server_socket.connect((robot_info['ip'], 9999))
+        server_socket.send('connection request'.encode('utf-8'))
+        robot_response = server_socket.recv(1024)
         if robot_response == b'connection ok':
             q2.put('connection ok')
             robot_selected = True
@@ -159,19 +159,24 @@ while True:
     any_control_key_pressed = False
     if keys[pygame.K_LEFT]:
         any_control_key_pressed = True
-        s.send(b'robot_command:turn_left')
+        server_socket.send(b'robot_command:turn_left')
+        print(b'robot_command:turn_left')
     if keys[pygame.K_RIGHT]:
         any_control_key_pressed = True
-        s.send(b'robot_command:turn_left')
+        server_socket.send(b'robot_command:turn_left')
+        print(b'robot_command:turn_left')
     if keys[pygame.K_UP]:
         any_control_key_pressed = True
-        s.send(b'robot_command:forward')
+        server_socket.send(b'robot_command:forward')
+        print(b'robot_command:forward')
     if keys[pygame.K_DOWN]:
         any_control_key_pressed = True
-        s.send(b'robot_command:backward')
+        server_socket.send(b'robot_command:backward')
+        print(b'robot_command:backward')
 
     if not any_control_key_pressed:
-        s.send(b'robot_command:all_stop')
+        server_socket.send(b'robot_command:all_stop')
+        print(b'robot_command:all_stop')
 
     valid, frame = cap.read()
     if valid:
