@@ -92,3 +92,6 @@ def main_robot_control(q_motor_control):
 main_server = Thread(target=main_robot_control, args=(q_motor_control,), daemon=True)
 main_server.start()
 
+while True:
+    time.sleep(20)
+    print('program running')
