@@ -89,6 +89,7 @@ def main_robot_control(q_motor_control):
             c.send('connection ok'.encode('utf-8'))
         if message.startswith(b'robot_command'):
             command = str(message).split(':')
+            print(command)
             q_motor_control.put(command[1])
 
 
