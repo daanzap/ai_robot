@@ -67,7 +67,7 @@ def motor_control_thread(q_in):
         print(command)
         if command != previous_command:
 
-            commands[str(command)][:-1]()
+            commands[str(command)[:-1]]()
             previous_command = command
 
 motor_control = Thread(target=motor_control_thread, args=(q_motor_control,),daemon=True)
