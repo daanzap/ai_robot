@@ -160,6 +160,7 @@ def send_command(robot_info, command):
     if command == previous_command:
         return
     previous_command = command
+    print(command)
     print('connection to {}'.format(robot_info['name']))
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # now connect to the web server on port 80 - the normal http port
@@ -177,23 +178,18 @@ while True:
     if keys[pygame.K_LEFT]:
         any_control_key_pressed = True
         send_command(current_robot,'turn_left')
-        print(b'robot_command:turn_left')
     if keys[pygame.K_RIGHT]:
         any_control_key_pressed = True
-        send_command(current_robot,'turn_left')
-        print(b'robot_command:turn_left')
+        send_command(current_robot,'turn_right')
     if keys[pygame.K_UP]:
         any_control_key_pressed = True
         send_command(current_robot,'forward')
-        print(b'robot_command:forward')
     if keys[pygame.K_DOWN]:
         any_control_key_pressed = True
         send_command(current_robot,'backward')
-        print(b'robot_command:backward')
 
     if not any_control_key_pressed:
         send_command(current_robot,'all_stop')
-        print(b'robot_command:all_stop')
 
     valid, frame = cap.read()
     if valid:
