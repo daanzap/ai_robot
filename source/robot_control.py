@@ -145,7 +145,6 @@ while True:
         break
 
 try:
-    print(time())
     # cap = cv2.VideoCapture("tcp://192.168.178.25:5001/")
     cap = cv2.VideoCapture()
     cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)
