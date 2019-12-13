@@ -89,7 +89,7 @@ def main_robot_control(q_out):
         if message == b'connection request':
             if proc_id is not None:
                 proc_id.kill()
-                sleep(2)
+                time.sleep(2)
             proc_id = subprocess.Popen(["raspivid","-v","-w","640", "-h", "480", "-fps","30","-n","-t", "0", "-l", "-o", "tcp://0.0.0.0:5001"])
             time.sleep(2)
             c.send('connection ok'.encode('utf-8'))
@@ -102,6 +102,6 @@ def main_robot_control(q_out):
 main_server = Thread(target=main_robot_control, args=(q_motor_control,), daemon=True)
 main_server.start()
 
-while True:
-    time.sleep(20)
-    print('program running')
+broadcast_server.join()
+motor_control.join()
+main_server.join()
