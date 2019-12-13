@@ -16,7 +16,7 @@ ip = "192.168.178.25"
 # Start PyGame:
 pygame.init()
 display_width = 640
-display_height = 640
+display_height = 480
 screen = pygame.display.set_mode((display_width, display_height))
 pygame.display.set_caption('Remote Webcam Viewer')
 font = pygame.font.SysFont("Arial", 14)
@@ -161,6 +161,7 @@ try:
     # cap = cv2.VideoCapture("tcp://192.168.178.25:5001/")
     cap = cv2.VideoCapture()
     cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)
+    cap.set(cv2.CAP_PROP_POS_FRAMES, 40)
     cap.open("tcp://{}:5001/".format(ip))
 
 except Exception as e:
