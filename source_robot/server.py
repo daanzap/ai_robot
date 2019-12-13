@@ -87,9 +87,11 @@ def main_robot_control(q_out):
         message = c.recv(1024)
         # message = 'Got connection from {}'.format(addr)
         if message == b'connection request':
-            if proc_id is None:
-                proc_id = subprocess.Popen(["raspivid","-v","-w","640", "-h", "480", "-fps","30","-n","-t", "0", "-l", "-o", "tcp://0.0.0.0:5001"])
+            if proc_id is not None:
+                subprocess.Popen(['kill','-9', proc_id])
                 time.sleep(2)
+            proc_id = subprocess.Popen(["raspivid","-v","-w","640", "-h", "480", "-fps","30","-n","-t", "0", "-l", "-o", "tcp://0.0.0.0:5001"])
+            time.sleep(2)
             c.send('connection ok'.encode('utf-8'))
         if message.startswith(b'robot_command'):
             command = str(message).split(':')
