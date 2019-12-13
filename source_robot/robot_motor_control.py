@@ -8,7 +8,7 @@ class MotorControl(object):
     BACKWARD = 'cw'
     LEFT_TRACK = 2
     RIGHT_TRACK = 1
-    SPEED = 80
+    SPEED = 100
 
     def move_track(self, motor_number, direction, speed):
         MOTOR.dcSTOP(0, motor_number)

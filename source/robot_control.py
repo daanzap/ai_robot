@@ -136,9 +136,22 @@ def select_robot():
 
         pygame.display.update()
 
+pygame.joystick.init()
+joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
+
+axes = 0
+
+if len(joysticks) > 0:
+
+    joystick = joysticks[0]
+    joystick.init()
+    axes = joystick.get_numaxes()
 
 
 while True:
+    for i in range(axes):
+        axis = joystick.get_axis(i)
+        print("{} = {}".format(i, axis))
     if not robot_selected:
         select_robot()
     else:
@@ -161,9 +174,9 @@ def send_command(robot_info, command):
         return
     previous_command = command
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    # now connect to the web server on port 80 - the normal http port
     server_socket.connect((robot_info['ip'], 9999))
     server_socket.send('robot_command:{}'.format(command).encode('utf-8'))
+
 
 # Main program loop:
 while True:
@@ -173,16 +186,20 @@ while True:
             sys.exit()
     keys = pygame.key.get_pressed()
     any_control_key_pressed = False
-    if keys[pygame.K_LEFT]:
+    turning = False
+    if joystick.get_axis(0) < -0.5 or joystick.get_axis(0) > 0.5:
+        turning = True
+
+    if keys[pygame.K_LEFT] or joystick.get_axis(0) < -0.5:
         any_control_key_pressed = True
         send_command(current_robot,'turn_left')
-    if keys[pygame.K_RIGHT]:
+    if keys[pygame.K_RIGHT] or joystick.get_axis(0) > 0.5:
         any_control_key_pressed = True
         send_command(current_robot,'turn_right')
-    if keys[pygame.K_UP]:
+    if keys[pygame.K_UP] or joystick.get_axis(1) < -0.5 and not turning:
         any_control_key_pressed = True
         send_command(current_robot,'forward')
-    if keys[pygame.K_DOWN]:
+    if keys[pygame.K_DOWN] or joystick.get_axis(1) > 0.5 and not turning:
         any_control_key_pressed = True
         send_command(current_robot,'backward')
 
