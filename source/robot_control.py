@@ -140,9 +140,10 @@ pygame.joystick.init()
 joysticks = [pygame.joystick.Joystick(x) for x in range(pygame.joystick.get_count())]
 
 axes = 0
+has_joystick = False
 
 if len(joysticks) > 0:
-
+    has_joystick = True
     joystick = joysticks[0]
     joystick.init()
     axes = joystick.get_numaxes()
@@ -160,7 +161,7 @@ while True:
 try:
     # cap = cv2.VideoCapture("tcp://192.168.178.25:5001/")
     cap = cv2.VideoCapture()
-    cap.set(cv2.CAP_PROP_BUFFERSIZE, 3)
+    cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
     cap.set(cv2.CAP_PROP_POS_FRAMES, 40)
     cap.open("tcp://{}:5001/".format(ip))
 
@@ -178,6 +179,19 @@ def send_command(robot_info, command):
     server_socket.connect((robot_info['ip'], 9999))
     server_socket.send('robot_command:{}'.format(command).encode('utf-8'))
 
+def is_turning():
+    if has_joystick:
+        if joystick.get_axis(0) < -0.5 or joystick.get_axis(0) > 0.5:
+            return True
+    else:
+        return False
+
+def get_joysitck_input(axis):
+    if has_joystick:
+        return joystick.get_axis(axis)
+    else:
+        return 0
+
 
 # Main program loop:
 while True:
@@ -187,20 +201,18 @@ while True:
             sys.exit()
     keys = pygame.key.get_pressed()
     any_control_key_pressed = False
-    turning = False
-    if joystick.get_axis(0) < -0.5 or joystick.get_axis(0) > 0.5:
-        turning = True
+    turning = is_turning()
 
-    if keys[pygame.K_LEFT] or joystick.get_axis(0) < -0.5:
+    if keys[pygame.K_LEFT] or get_joysitck_input(0) < -0.5:
         any_control_key_pressed = True
         send_command(current_robot,'turn_left')
-    if keys[pygame.K_RIGHT] or joystick.get_axis(0) > 0.5:
+    if keys[pygame.K_RIGHT] or get_joysitck_input(0) > 0.5:
         any_control_key_pressed = True
         send_command(current_robot,'turn_right')
-    if keys[pygame.K_UP] or joystick.get_axis(1) < -0.5 and not turning:
+    if keys[pygame.K_UP] or get_joysitck_input(1) < -0.5 and not turning:
         any_control_key_pressed = True
         send_command(current_robot,'forward')
-    if keys[pygame.K_DOWN] or joystick.get_axis(1) > 0.5 and not turning:
+    if keys[pygame.K_DOWN] or get_joysitck_input(1) > 0.5 and not turning:
         any_control_key_pressed = True
         send_command(current_robot,'backward')
 
