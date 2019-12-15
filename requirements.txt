@@ -6,7 +6,7 @@ Cap1xxx==0.1.3
 chardet==2.3.0
 click==6.6
 colorama==0.3.7
-cryptography==1.7.1
+cryptography==2.8.0
 drumhat==0.1.0
 envirophat==1.0.0
 ExplorerHAT==0.4.2
