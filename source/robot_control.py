@@ -178,6 +178,7 @@ def send_command(robot_info, command):
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.connect((robot_info['ip'], 9999))
     server_socket.send('robot_command:{}'.format(command).encode('utf-8'))
+    return command
 
 def is_turning():
     if has_joystick:
@@ -192,13 +193,16 @@ def get_joysitck_input(axis):
     else:
         return 0
 
-
+recording = False
 # Main program loop:
 while True:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
+        if event.type == pygame.KEYUP and event.key == pygame.K_r:
+            recording = not recording
+
     keys = pygame.key.get_pressed()
     any_control_key_pressed = False
     turning = is_turning()
@@ -218,6 +222,8 @@ while True:
 
     if not any_control_key_pressed:
         send_command(current_robot,'all_stop')
+
+
 
     valid, frame = cap.read()
     if valid:
