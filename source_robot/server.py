@@ -9,6 +9,7 @@ robot_name = 'robat'
 
 from robot_motor_control import MotorControl
 
+print('starting ai robot server')
 # raspivid -v -w 640 -h 480 -fps 30 -n -t 0 -l -o tcp://0.0.0.0:5001
 def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -24,6 +25,7 @@ def get_ip():
 
 
 def broadcast_info():
+    print('start broadcast server')
     host_name = socket.gethostname()
     msg = {
         'name': robot_name,
