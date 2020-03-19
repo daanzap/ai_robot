@@ -4,5 +4,5 @@
 
 cd /
 cd /home/pi/ai_robot/source_robot
-python3 server.py
+python3 server.py & > /home/pi/logs/robot.log 2>&1
 cd /

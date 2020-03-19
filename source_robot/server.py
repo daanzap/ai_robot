@@ -5,9 +5,10 @@ import time
 from queue import Queue
 from threading import Thread
 import subprocess
-robot_name = 'robat'
+import .settings
 
-from robot_motor_control import MotorControl
+
+from .robot_motor_control import MotorControl
 
 print('starting ai robot server')
 # raspivid -v -w 640 -h 480 -fps 30 -n -t 0 -l -o tcp://0.0.0.0:5001

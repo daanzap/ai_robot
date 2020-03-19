@@ -1,3 +1,4 @@
+import os
 import json
 import socket, sys
 from threading import Thread
@@ -60,13 +61,15 @@ def connect_to_robot(robot_info):
     global robot_selected
     global server_socket
     global current_robot
+    global ip
     current_robot = robot_info
     if not connection_in_progress:
         connection_in_progress = True
-        print('connection to {}'.format(robot_info['name']))
+        print('connection to {}'.format(robot_info['ip']))
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # now connect to the web server on port 80 - the normal http port
         server_socket.connect((robot_info['ip'], 9999))
+        ip = robot_info['ip']
         server_socket.send('connection request'.encode('utf-8'))
         robot_response = server_socket.recv(1024)
         if robot_response == b'connection ok':
@@ -99,6 +102,9 @@ def select_robot():
     polling_thread.start()
     robot_data = None
     while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
         try:
             if q2.get_nowait() == 'connection ok':
                 break
@@ -173,7 +179,7 @@ previous_command = ''
 def send_command(robot_info, command):
     global previous_command
     if command == previous_command:
-        return
+        return command
     previous_command = command
     server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server_socket.connect((robot_info['ip'], 9999))
@@ -185,6 +191,7 @@ def is_turning():
         if joystick.get_axis(0) < -0.5 or joystick.get_axis(0) > 0.5:
             return True
     else:
+
         return False
 
 def get_joysitck_input(axis):
@@ -195,33 +202,49 @@ def get_joysitck_input(axis):
 
 recording = False
 # Main program loop:
+false_frames = 0
+file_open = False
 while True:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
-        if event.type == pygame.KEYUP and event.key == pygame.K_r:
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+            print('r pressed')
             recording = not recording
+            if recording:
+                file_open = True
+                timestr = time.strftime("%Y%m%d-%H%M%S")
+                filename = "{}.log".format(timestr)
+                file_path = os.path.join('logs', filename)
+                f = open(file_path, "w")
+            else:
+                if file_open:
+                    f.close()
+                    file_open = False
+
 
     keys = pygame.key.get_pressed()
     any_control_key_pressed = False
-    turning = is_turning()
-
+    turning = False
+    command = 'all_stop'
     if keys[pygame.K_LEFT] or get_joysitck_input(0) < -0.5:
         any_control_key_pressed = True
-        send_command(current_robot,'turn_left')
+        turning = True
+        command = send_command(current_robot,'turn_left')
     if keys[pygame.K_RIGHT] or get_joysitck_input(0) > 0.5:
         any_control_key_pressed = True
-        send_command(current_robot,'turn_right')
+        turning = True
+        command = send_command(current_robot,'turn_right')
     if keys[pygame.K_UP] or get_joysitck_input(1) < -0.5 and not turning:
         any_control_key_pressed = True
-        send_command(current_robot,'forward')
+        command = send_command(current_robot,'forward')
     if keys[pygame.K_DOWN] or get_joysitck_input(1) > 0.5 and not turning:
         any_control_key_pressed = True
-        send_command(current_robot,'backward')
+        command = send_command(current_robot,'backward')
 
     if not any_control_key_pressed:
-        send_command(current_robot,'all_stop')
+        command = send_command(current_robot,'all_stop')
 
 
 
@@ -229,7 +252,21 @@ while True:
     if valid:
         image = frame
         previousImage = image
+        scale_percent = 5  # percent of original size
+        width = int(image.shape[1] * scale_percent / 100)
+        height = int(image.shape[0] * scale_percent / 100)
+        dim = (width, height)
+        resized = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
+        if recording:
+            print('recording')
+            cv2.circle(image, (30,30), 4, (255,0,0),thickness=-1)
+            size_array = dim[0]*dim[1]*3 # width height time 3 channels
+            image_data = resized.reshape(1,size_array)
+            image_string = ','.join([str(i) for i in image_data])
+            log_String = ','.join(([command,image_string]))
+            f.write(log_String+"\n")
 
+        #image[10:height+10, 10:width+10] = resized
         # Convert image
         try:
 
@@ -243,4 +280,8 @@ while True:
         # clock.tick(1000)
         pygame.display.flip()
     else:
+        false_frames += 1
+        if false_frames == 10000:
+            # select_robot()
+            false_frames = 0
         print('frame invalid')
