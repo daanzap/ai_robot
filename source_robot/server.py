@@ -26,7 +26,8 @@ def get_ip():
         # doesn't even have to be reachable
         s.connect(('10.255.255.255', 1))
         IP = s.getsockname()[0]
-    except:
+    except Exception as e:
+        logging.info(e)
         IP = '127.0.0.1'
     finally:
         s.close()
