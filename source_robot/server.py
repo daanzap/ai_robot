@@ -21,16 +21,21 @@ logging.basicConfig(filename=LOG_FILE, format=LOG_FORMAT, level=LOG_LEVEL)
 logging.info('starting ai robot server')
 # raspivid -v -w 640 -h 480 -fps 30 -n -t 0 -l -o tcp://0.0.0.0:5001
 def get_ip():
+    number_of_tries = 10
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        # doesn't even have to be reachable
-        s.connect(('10.255.255.255', 1))
-        IP = s.getsockname()[0]
-    except Exception as e:
-        logging.info(e)
-        IP = '127.0.0.1'
-    finally:
-        s.close()
+    while number_of_tries > 0:
+        try:
+            # doesn't even have to be reachable
+            s.connect(('10.255.255.255', 1))
+            IP = s.getsockname()[0]
+        except Exception as e:
+
+            logging.info(e)
+            time.sleep(2)
+            number_of_tries -= 1
+            IP = '127.0.0.1'
+
+    s.close()
     return IP
 
 
