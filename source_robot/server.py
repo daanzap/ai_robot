@@ -5,7 +5,7 @@ import time
 from queue import Queue
 from threading import Thread
 import subprocess
-import source_robot.settings
+import .settings
 
 
 from .robot_motor_control import MotorControl
@@ -27,7 +27,7 @@ def get_ip():
         IP = s.getsockname()[0]
     except:
         IP = '127.0.0.1'
-    finally:
+    finally:4
         s.close()
     return IP
 
