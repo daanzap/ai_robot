@@ -7,9 +7,9 @@ from threading import Thread
 import subprocess
 
 
-from source_robot.robot_motor_control import MotorControl
+from robot_motor_control import MotorControl
 
-from source_robot.settings_robot import robot_name
+from settings_robot import robot_name
 
 import logging
 
