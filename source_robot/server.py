@@ -75,7 +75,7 @@ def motor_control_thread(q_in):
     while True:
         logging.info('in motor control thread')
         command = q_in.get()
-        print(command)
+        logging.info(command)
         if command != previous_command:
 
             commands[str(command)[:-1]]()
@@ -87,7 +87,7 @@ motor_control.start()
 def main_robot_control(q_out):
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # bind the socket to a public host, and a well-known port
-    print(get_ip())
+    logging.info(get_ip())
     serversocket.bind(('', 9999))
     # become a server socket
     serversocket.listen(5)
