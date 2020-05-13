@@ -5,12 +5,19 @@ import time
 from queue import Queue
 from threading import Thread
 import subprocess
-import .settings
+import source_robot.settings
 
 
 from .robot_motor_control import MotorControl
 
-print('starting ai robot server')
+import logging
+
+LOG_LEVEL = logging.INFO
+LOG_FILE = "/var/log/ai_robot"
+LOG_FORMAT = "%(asctime)s %(levelname)s %(message)s"
+logging.basicConfig(filename=LOG_FILE, format=LOG_FORMAT, level=LOG_LEVEL)
+
+logging.info('starting ai robot server')
 # raspivid -v -w 640 -h 480 -fps 30 -n -t 0 -l -o tcp://0.0.0.0:5001
 def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -26,10 +33,10 @@ def get_ip():
 
 
 def broadcast_info():
-    print('start broadcast server')
+    logging.info('start broadcast server')
     host_name = socket.gethostname()
     msg = {
-        'name': robot_name,
+        'name': source_robot.settings.robot_name,
         'hostname': host_name,
         'ip':get_ip()
     }
@@ -40,7 +47,7 @@ def broadcast_info():
     data = 'no data yet'
     while True:
         time.sleep(2)
-        print(msg)
+        logging.info(msg)
         s.setblocking(0)
         s.sendto(msg, dest)
 
@@ -52,7 +59,7 @@ q = Queue()
 q_motor_control = Queue()
 
 def motor_control_thread(q_in):
-    print('starting motor control thread')
+    logging.info('starting motor control thread')
     motor = MotorControl()
     commands = {
         'forward': motor.forward,
@@ -65,7 +72,7 @@ def motor_control_thread(q_in):
     previous_command = ''
 
     while True:
-        print('in motor control thread')
+        logging.info('in motor control thread')
         command = q_in.get()
         print(command)
         if command != previous_command:
