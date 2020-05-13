@@ -5,7 +5,7 @@ import time
 from queue import Queue
 from threading import Thread
 import subprocess
-from . import settings
+from .settings_robot import robot_name
 
 
 from .robot_motor_control import MotorControl
@@ -36,7 +36,7 @@ def broadcast_info():
     logging.info('start broadcast server')
     host_name = socket.gethostname()
     msg = {
-        'name': source_robot.settings.robot_name,
+        'name': robot_name,
         'hostname': host_name,
         'ip':get_ip()
     }
