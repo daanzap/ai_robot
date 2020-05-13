@@ -5,10 +5,11 @@ import time
 from queue import Queue
 from threading import Thread
 import subprocess
-from .settings_robot import robot_name
 
 
 from .robot_motor_control import MotorControl
+
+from .settings_robot import robot_name
 
 import logging
 
