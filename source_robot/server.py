@@ -21,7 +21,7 @@ logging.basicConfig(filename=LOG_FILE, format=LOG_FORMAT, level=LOG_LEVEL)
 logging.info('starting ai robot server')
 # raspivid -v -w 640 -h 480 -fps 30 -n -t 0 -l -o tcp://0.0.0.0:5001
 def get_ip():
-    number_of_tries = 10
+    number_of_tries = 40
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     while number_of_tries > 0:
         try:
