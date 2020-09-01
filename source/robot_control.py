@@ -1,7 +1,8 @@
+import copy
 import os
 import json
 import socket, sys
-from threading import Thread
+from threading import Thread, Lock
 from queue import Queue
 
 import time
@@ -39,6 +40,7 @@ robot_selected = False
 current_robot = {}
 
 connection_in_progress = False
+
 
 def find_robots(out_q):
     """connect to one of the robots"""
@@ -98,6 +100,7 @@ def draw_button(robot_name, robot_info, y_coord, screen):
     screen.blit(TextSurf, TextRect)
 
 def select_robot():
+
     polling_thread = Thread(target=find_robots, args=(q,), daemon=True)
     polling_thread.start()
     robot_data = None
@@ -114,17 +117,15 @@ def select_robot():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
-
         if robot_data == None:
             q_data = q.get()
-            robot_data = q_data
+            robot_data = copy.deepcopy(q_data)
         else:
             try:
                 q_data = q.get_nowait()
-                robot_data = q_data
+                robot_data = copy.deepcopy(q_data)
             except Exception as e:
                 pass
-
 
 
 
@@ -132,14 +133,12 @@ def select_robot():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
-
         for robot,robot_info in robot_data.items():
 
             draw_button(robot,robot_info, y_coord,screen)
 
 
-            y_coord += 150
-
+            y_coord += 70
         pygame.display.update()
 
 pygame.joystick.init()
