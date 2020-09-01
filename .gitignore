@@ -178,3 +178,4 @@ fabric.properties
 /source_robot/settings_robot.py
 openvpn_netgear/
 /images/
+/simulator/logs/*.log

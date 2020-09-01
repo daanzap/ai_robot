@@ -267,13 +267,15 @@ first_loop = True
 pilot = AutoSteer()
 camera_view = None
 show_camera_view = False
+recording = False
 font = pygame.font.Font('freesansbold.ttf', 32)
 white = (255, 255, 255)
 green = (0, 255, 0)
 blue = (0, 0, 128)
 text = font.render('Using strategy', True, green, white)
 textRect = text.get_rect()
-textRect.center = (800 // 2, 40 // 2)
+textRect.center = (int(800 // 2), int(40 // 2))
+file_open = False
 while True:
     speed = 0
     auto_pilot = False
@@ -283,7 +285,7 @@ while True:
         if event.type == pygame.QUIT:
             sys.exit()
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_r:
+            if event.key == pygame.K_n:
                 direction_of_travel = 90
                 existing_path = draw_path(surface, existing_path=[])
                 initial_position_robot = existing_path[0]
@@ -292,26 +294,43 @@ while True:
             if event.key == pygame.K_c:
                 show_camera_view = not show_camera_view
 
+            if event.key == pygame.K_r:
+                recording = not recording
+                if recording:
+                    file_open = True
+                    timestr = time.strftime("%Y%m%d-%H%M%S")
+                    filename = "{}.log".format(timestr)
+                    file_path = os.path.join('logs', filename)
+                    f = open(file_path, "w")
+                else:
+                    if file_open:
+                        f.close()
+                        file_open = False
+
 
     keys = pygame.key.get_pressed()
-
+    command = 'stop'
     if keys[pygame.K_s]:
         auto_pilot = True
         auto_pilot_direction = pilot.steer(camera_view)
         speed_setting = 4
     if keys[pygame.K_LEFT] or auto_pilot_direction == 'left':
         direction_of_travel += 7
+        command = 'left'
     if keys[pygame.K_RIGHT] or auto_pilot_direction == 'right':
         direction_of_travel -= 7
+        command = 'right'
+
 
     direction_of_travel = direction_of_travel%360
 
 
     if keys[pygame.K_UP] or auto_pilot:
         speed = speed_setting
+        command = "forward"
     if keys[pygame.K_DOWN]:
-       speed = -speed_setting
-
+        speed = -speed_setting
+        command = "backward"
     existing_path = draw_path(surface, existing_path=existing_path)
     if first_loop:
         first_loop = False
@@ -321,7 +340,18 @@ while True:
     screen.blit(surface, (0, 0))
     robot.update(direction_of_travel,speed=speed)
     camera_view,surface = robot.camera_view(surface, draw_camera_view=show_camera_view)
+    width = camera_view.shape[1]
+    height = camera_view.shape[0]
+    dim = (width, height)
+    if recording:
+        print('recording')
+        pygame.draw.circle(surface, (255,0,0), (display_width-30,30), 5)
 
+        size_array = dim[0] * dim[1] * 3  # width height time 3 channels
+        image_data = camera_view.reshape(1, size_array)
+        image_string = ','.join([str(i) for i in image_data])
+        log_String = ','.join(([command, image_string]))
+        f.write(log_String + "\n")
     screen.blit(surface, (0, 0))
     screen.blit(robot.image,robot.rect)
     if auto_pilot:
