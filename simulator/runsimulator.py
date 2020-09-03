@@ -15,7 +15,7 @@ import cv2
 
 from pygame.time import Clock
 
-from strategies.auto_pilot import AutoSteer
+from strategies.student_strategy import AutoSteerStudent
 
 # Start PyGame:
 pygame.init()
@@ -264,7 +264,7 @@ surface = pygame.Surface((display_width,display_height))
 existing_path = draw_path(surface)
 direction_of_travel = 90
 first_loop = True
-pilot = AutoSteer()
+pilot = AutoSteerStudent()
 camera_view = None
 show_camera_view = False
 recording = False
@@ -276,6 +276,7 @@ text = font.render('Using strategy', True, green, white)
 textRect = text.get_rect()
 textRect.center = (int(800 // 2), int(40 // 2))
 file_open = False
+reduce_camera_image = 5
 while True:
     speed = 0
     auto_pilot = False
@@ -327,7 +328,8 @@ while True:
 
     if keys[pygame.K_UP] or auto_pilot:
         speed = speed_setting
-        command = "forward"
+        if command == 'stop':
+            command = "forward"
     if keys[pygame.K_DOWN]:
         speed = -speed_setting
         command = "backward"
@@ -342,14 +344,14 @@ while True:
     camera_view,surface = robot.camera_view(surface, draw_camera_view=show_camera_view)
     width = camera_view.shape[1]
     height = camera_view.shape[0]
-    dim = (width, height)
+    dim = (int(width/reduce_camera_image), int(height/reduce_camera_image))
     if recording:
         print('recording')
         pygame.draw.circle(surface, (255,0,0), (display_width-30,30), 5)
-
+        camera_view_reduced = camera_view[::reduce_camera_image, ::reduce_camera_image]
         size_array = dim[0] * dim[1] * 3  # width height time 3 channels
-        image_data = camera_view.reshape(1, size_array)
-        image_string = ','.join([str(i) for i in image_data])
+        image_data = camera_view_reduced.reshape(1, size_array)
+        image_string = ','.join([str(i) for i in image_data[0]])
         log_String = ','.join(([command, image_string]))
         f.write(log_String + "\n")
     screen.blit(surface, (0, 0))

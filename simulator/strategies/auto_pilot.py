@@ -26,8 +26,8 @@ class AutoSteer(object):
             return 'left'
         elif sum_right < sum_left:
             return 'right'
-        elif sum_left-sum_right == 0:
-            return 'left'
+        elif sum_left == sum_right :
+            return 'forward'
         else:
             return ''
 
