@@ -281,7 +281,7 @@ while True:
     speed = 0
     auto_pilot = False
     auto_pilot_direction = ''
-    speed_setting = 4
+    speed_setting = 3
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
