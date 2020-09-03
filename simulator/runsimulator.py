@@ -68,7 +68,7 @@ class Robot(pygame.sprite.Sprite):
             y = old_y
 
         self.rect = self.image.get_rect()  # Replace old rect with new rect.
-        self.rect.center = (x, y)  # Put the new rect's center at old center.
+        self.rect.center = (int(x), int(y))  # Put the new rect's center at old center.
 
     def camera_view(self, surface, draw_camera_view=True):
         center_view = calculate_new_xy(self.rect.center,20,math.radians(self.angle))
@@ -133,7 +133,7 @@ def in_bounding_box(x, y):
     return not (x < min_x or x > max_x or y < min_y or y > max_y)
 
 def draw_tile(surface, x, y):
-    rect = pygame.Rect(x-(.5*tile_size),y-(.5*tile_size),tile_size,tile_size)
+    rect = pygame.Rect(int(x-(.5*tile_size)),int(y-(.5*tile_size)),tile_size,tile_size)
     pygame.draw.rect(surface, (70,70,70), rect)
 
 def get_random_offset(old_x, old_y):
