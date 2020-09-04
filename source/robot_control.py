@@ -251,9 +251,11 @@ while True:
     if valid:
         image = frame
         previousImage = image
-        scale_percent = 5  # percent of original size
-        width = int(image.shape[1] * scale_percent / 100)
-        height = int(image.shape[0] * scale_percent / 100)
+        # scale_percent = 5  # percent of original size
+        # width = int(image.shape[1] * scale_percent / 100)
+        # height = int(image.shape[0] * scale_percent / 100)
+        width = 64
+        height = 64
         dim = (width, height)
         resized = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
         if recording:

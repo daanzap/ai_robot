@@ -79,12 +79,12 @@ pantilthat==0.0.7
 parso==0.6.2
 pexpect==4.8.0
 phatbeat==0.1.1
-pi-plates==6.2
+#pi-plates==6.2
 pianohat==0.1.0
 pickleshare==0.7.5
 picraft==1.0
 piglow==1.2.5
-pigpio==1.45
+#pigpio==1.45
 Pillow==4.0.0
 pipreqs==0.4.10
 prometheus-client==0.7.1
@@ -130,7 +130,7 @@ sklearn==0.0
 skywriter==0.0.7
 sn3218==1.2.7
 spi==0.2.0
-spidev==3.4
+#spidev==3.4
 ST7735==0.0.3
 tensorboard==2.3.0
 tensorboard-plugin-wit==1.7.0
