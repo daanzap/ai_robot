@@ -263,7 +263,7 @@ while True:
             cv2.circle(image, (30,30), 4, (255,0,0),thickness=-1)
             size_array = dim[0]*dim[1]*3 # width height time 3 channels
             image_data = resized.reshape(1,size_array)
-            image_string = ','.join([str(i) for i in image_data])
+            image_string = ','.join([str(i) for i in image_data[0]])
             log_String = ','.join(([command,image_string]))
             f.write(log_String+"\n")
 
