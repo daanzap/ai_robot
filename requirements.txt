@@ -97,7 +97,7 @@ pycairo==1.19.1
 pycparser==2.20
 pycrypto==2.6.1
 pygame==1.9.6
-Pygments==2.5.2
+Pygments==2.7.4
 PyGObject==3.34.0
 pyinotify==0.9.6
 PyJWT==1.4.2
