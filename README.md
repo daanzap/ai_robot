@@ -42,5 +42,15 @@ network={
 }
 
 ```
+login router
+admin:solaria07
+
+setting router
+ip adress 10.42.0.72
+netamst 255.255.255.0
+gateway 10.72.0.1
+geavanceerd -> VPC
+
+
 
 

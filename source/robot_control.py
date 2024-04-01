@@ -50,6 +50,7 @@ def find_robots(out_q):
     while (1):
         m = s.recvfrom(4096)
         m_data = json.loads(m[0])
+        print(m_data)
         if m_data['name'] not in robots_broadcasting:
             robots_broadcasting[m_data['name']] = m_data
         out_q.put(robots_broadcasting)
@@ -119,6 +120,7 @@ def select_robot():
                 sys.exit()
         if robot_data == None:
             q_data = q.get()
+
             robot_data = copy.deepcopy(q_data)
         else:
             try:
