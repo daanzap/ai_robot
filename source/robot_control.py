@@ -165,15 +165,40 @@ while True:
     else:
         break
 
-try:
-    # cap = cv2.VideoCapture("tcp://192.168.178.25:5001/")
-    cap = cv2.VideoCapture()
-    cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
-    cap.set(cv2.CAP_PROP_POS_FRAMES, 40)
-    cap.open("tcp://{}:5001/".format(ip))
+# try:
+#     # cap = cv2.VideoCapture("tcp://192.168.178.25:5001/")
+#     cap = cv2.VideoCapture()
+#     cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+#     cap.set(cv2.CAP_PROP_POS_FRAMES, 40)
+#     cap.open("tcp://{}:5001/".format(ip))
+#
+# except Exception as e:
+#     print(str(e))
 
-except Exception as e:
-    print(str(e))
+current_frame = None
+frame_lock = Lock()
+def frame_grabber():
+    global current_frame
+    try:
+        # cap = cv2.VideoCapture("tcp://192.168.178.25:5001/")
+        cap = cv2.VideoCapture()
+        cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
+        cap.set(cv2.CAP_PROP_POS_FRAMES, 40)
+        cap.open("tcp://{}:5001/".format(ip))
+
+    except Exception as e:
+        print(str(e))
+    time.sleep(2)
+    while True:
+        time.sleep(0.005)
+        with frame_lock:
+            local_current_frame = cap.read()
+            if local_current_frame is not None:
+                current_frame = local_current_frame
+
+
+frame_grabber_thread = Thread(target=frame_grabber, args=(), daemon=True)
+frame_grabber_thread.start()
 
 previous_command = ''
 
@@ -248,8 +273,13 @@ while True:
         command = send_command(current_robot,'all_stop')
 
 
+    with frame_lock:
+        if current_frame is not None:
 
-    valid, frame = cap.read()
+            valid, frame = current_frame
+        else:
+            continue
+    # valid, frame = cap.read()
     if valid:
         image = frame
         previousImage = image

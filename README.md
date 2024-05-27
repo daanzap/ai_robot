@@ -8,6 +8,9 @@ daan@daan-GL702VSK:~$ cd bitofpepper/ai_robot/openvpn_netgear/
 daan@daan-GL702VSK:~/bitofpepper/ai_robot/openvpn_netgear$ ls
 ca.crt       client.crt  dhcp-client-request.sh
 client.conf  client.key  start_vpn.sh
+
+***Set network as shared to others***
+
 daan@daan-GL702VSK:~/bitofpepper/ai_robot/openvpn_netgear$ ./start_vpn.sh 
 
 
