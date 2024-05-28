@@ -108,7 +108,7 @@ def main_robot_control(q_out):
             if proc_id is not None:
                 proc_id.kill()
                 time.sleep(2)
-            proc_id = subprocess.Popen(["raspivid","-v","-w","640", "-h", "480", "-fps","30","-n","-t", "0", "-l", "-o", "-u","{}".format(addr),"-p","5001"])
+            proc_id = subprocess.Popen(["raspivid","-v","-w","640", "-h", "480", "-fps","30","-n","-t", "0", "-l", "-o","udp://{}:5001".format(addr)])
             time.sleep(2)
             c.send('connection ok'.encode('utf-8'))
         if message.startswith(b'robot_command'):
