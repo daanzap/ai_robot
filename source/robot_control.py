@@ -183,8 +183,8 @@ def frame_grabber():
         # cap = cv2.VideoCapture("tcp://192.168.178.25:5001/")
         cap = cv2.VideoCapture()
         cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
-        cap.set(cv2.CAP_PROP_POS_FRAMES, 40)
-        cap.open("tcp://{}:5001/".format(ip))
+        cap.set(cv2.CAP_PROP_POS_FRAMES, 50)
+        cap.open("udp://{}:5001/".format(ip))
 
     except Exception as e:
         print(str(e))
