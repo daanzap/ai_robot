@@ -20,6 +20,14 @@ lib64/
 parts/
 sdist/
 var/
+models/
+openvpn_netgear/ca.crt
+openvpn_netgear/client.conf
+openvpn_netgear/client.crt
+openvpn_netgear/client.key
+
+openvpn_netgear/ca.crt
+
 wheels/
 *.egg-info/
 .installed.cfg

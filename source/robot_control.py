@@ -191,7 +191,7 @@ def frame_grabber():
         print(str(e))
     time.sleep(2)
     while True:
-        time.sleep(0.005)
+        time.sleep(0.015)
         with frame_lock:
             local_current_frame = cap.read()
             if local_current_frame is not None:
