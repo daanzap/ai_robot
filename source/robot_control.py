@@ -4,6 +4,7 @@ import json
 import socket, sys
 from threading import Thread, Lock
 from queue import Queue
+from source.strategies.strategy import AutoSteer
 
 import time
 
@@ -184,7 +185,7 @@ def frame_grabber():
         cap = cv2.VideoCapture()
         cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
         cap.set(cv2.CAP_PROP_POS_FRAMES, 50)
-        cap.open("udp://{}:5001/".format(ip))
+        cap.open("tcp://{}:5001/".format(ip))
 
     except Exception as e:
         print(str(e))
@@ -230,6 +231,9 @@ recording = False
 # Main program loop:
 false_frames = 0
 file_open = False
+auto_pilot = AutoSteer()
+
+
 while True:
 
     for event in pygame.event.get():
@@ -248,29 +252,35 @@ while True:
                 if file_open:
                     f.close()
                     file_open = False
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_m:
+            print('reload model')
+            auto_pilot.reload()
 
 
     keys = pygame.key.get_pressed()
     any_control_key_pressed = False
     turning = False
     command = 'all_stop'
-    if keys[pygame.K_LEFT] or get_joysitck_input(0) < -0.5:
-        any_control_key_pressed = True
-        turning = True
-        command = send_command(current_robot,'turn_left')
-    if keys[pygame.K_RIGHT] or get_joysitck_input(0) > 0.5:
-        any_control_key_pressed = True
-        turning = True
-        command = send_command(current_robot,'turn_right')
-    if keys[pygame.K_UP] or get_joysitck_input(1) < -0.5 and not turning:
-        any_control_key_pressed = True
-        command = send_command(current_robot,'forward')
-    if keys[pygame.K_DOWN] or get_joysitck_input(1) > 0.5 and not turning:
-        any_control_key_pressed = True
-        command = send_command(current_robot,'backward')
+    if keys[pygame.K_s]:
+        command = send_command(current_robot, auto_pilot.steer(frame))
+    else:
+        if keys[pygame.K_LEFT] or get_joysitck_input(0) < -0.5:
+            any_control_key_pressed = True
+            turning = True
+            command = send_command(current_robot,'turn_left')
+        if keys[pygame.K_RIGHT] or get_joysitck_input(0) > 0.5:
+            any_control_key_pressed = True
+            turning = True
+            command = send_command(current_robot,'turn_right')
+        if keys[pygame.K_UP] or get_joysitck_input(1) < -0.5 and not turning:
+            any_control_key_pressed = True
+            command = send_command(current_robot,'forward')
+        if keys[pygame.K_DOWN] or get_joysitck_input(1) > 0.5 and not turning:
+            any_control_key_pressed = True
+            command = send_command(current_robot,'backward')
 
-    if not any_control_key_pressed:
-        command = send_command(current_robot,'all_stop')
+        if not any_control_key_pressed:
+            command = send_command(current_robot,'all_stop')
 
 
     with frame_lock:
