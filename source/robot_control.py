@@ -317,4 +317,4 @@ while True:
         if false_frames == 10000:
             # select_robot()
             false_frames = 0
-        print('frame invalid')
+            print('frame invalid')
