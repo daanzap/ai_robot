@@ -1,0 +1,13 @@
+[Unit]
+Description=Run robot server
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+ExecStart=/usr/bin/python3 /home/pi/ai_robot/source_robot/server.py
+StandardOutput=inherit
+StandardInput=inherit
+User=pi
+
+[Install]
+WantedBy=multi-user.target
