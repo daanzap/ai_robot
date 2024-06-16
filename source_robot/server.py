@@ -89,16 +89,17 @@ def motor_control_thread(q_in):
         logging.info('in motor control thread')
         command = q_in.get()
         logging.info(command)
-
+        if time.time() - last_ping > 20:
+            connection_alive = False
+            continue
+        last_ping = time.time()
         if str(command)[:-1] == "ping":
-            last_ping = time.time()
             logging.info("ping registered")
             continue
         if command != previous_command:
             commands[str(command)[:-1]]()
             previous_command = command
-        if time.time() - last_ping > 5:
-            connection_alive = False
+
 
 motor_control = Thread(target=motor_control_thread, args=(q_motor_control,),daemon=True)
 motor_control.start()
