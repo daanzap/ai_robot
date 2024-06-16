@@ -81,6 +81,7 @@ def motor_control_thread(q_in):
         'backward': motor.backward,
         'all_stop': motor.all_stop
 
+
     }
     previous_command = ''
     last_ping = time.time()
@@ -90,7 +91,8 @@ def motor_control_thread(q_in):
         logging.info(command)
         if command == "ping":
             last_ping = time.time()
-        elif command != previous_command:
+            continue
+        if command != previous_command:
             commands[str(command)[:-1]]()
             previous_command = command
         if time.time() - last_ping > 5:
