@@ -54,6 +54,9 @@ netamst 255.255.255.0
 gateway 10.72.0.1
 geavanceerd -> VPC
 
+settings robot
+
+
 
 
 
