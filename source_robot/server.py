@@ -90,7 +90,7 @@ def motor_control_thread(q_in):
         command = q_in.get()
         logging.info(command)
 
-        if command == "ping":
+        if str(command)[:-1] == "ping":
             last_ping = time.time()
             logging.info("ping registered")
             continue
