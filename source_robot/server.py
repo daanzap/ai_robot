@@ -71,6 +71,7 @@ q = Queue()
 q_motor_control = Queue()
 
 def motor_control_thread(q_in):
+    global connection_alive
     logging.info('starting motor control thread')
     motor = MotorControl()
     commands = {
