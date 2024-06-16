@@ -109,7 +109,7 @@ def main_robot_control(q_out):
                 proc_id.kill()
                 time.sleep(2)
             #proc_id = subprocess.Popen(["raspivid","-v","-w","640", "-h", "480", "-fps","30","-n","-t", "0", "-l", "-o","tcp://0.0.0.0:5001","-fl"])
-            proc_id = subprocess.Popen(["libcamera-vid","-t","0","--framerate","20","--inline","-o","udp://{}:5555".format(addr[0]),"--codec","h264"])
+            proc_id = subprocess.Popen(["libcamera-vid","-t","0","--framerate","20","--width","640","--height","480","--inline","-o","udp://{}:5555".format(addr[0]),"--codec","h264"])
 
             time.sleep(2)
             c.send('connection ok'.encode('utf-8'))
