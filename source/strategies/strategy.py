@@ -8,7 +8,7 @@ from tensorflow.python.keras.models import load_model
 class AutoSteer(object):
     ################## Keras deeplearning implementation ###################################
     def __init__(self):
-        self.model_path = os.path.join('..', 'models', 'robot_model.h5')
+        self.model_path = os.path.join('..', 'models', 'robot_model.keras')
         self.model = load_model(self.model_path)
 
     def reload(self):
