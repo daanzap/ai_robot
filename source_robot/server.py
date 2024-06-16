@@ -19,6 +19,8 @@ LOG_FORMAT = "%(asctime)s %(levelname)s %(message)s"
 logging.basicConfig(filename=LOG_FILE, format=LOG_FORMAT, level=LOG_LEVEL)
 
 logging.info('starting ai robot server')
+
+connection_alive = False
 # raspivid -v -w 640 -h 480 -fps 30 -n -t 0 -l -o tcp://0.0.0.0:5001
 def get_ip():
     number_of_tries = 40
@@ -41,6 +43,7 @@ def get_ip():
 
 
 def broadcast_info():
+    global connection_alive
     logging.info('start broadcast server')
     host_name = socket.gethostname()
     msg = {
@@ -55,9 +58,10 @@ def broadcast_info():
     data = 'no data yet'
     while True:
         time.sleep(2)
-        logging.info(msg)
-        s.setblocking(0)
-        s.sendto(msg, dest)
+        if not connection_alive:
+            logging.info(msg)
+            s.setblocking(0)
+            s.sendto(msg, dest)
 
 broadcast_server = Thread(target=broadcast_info, daemon=True)
 broadcast_server.start()
@@ -78,20 +82,24 @@ def motor_control_thread(q_in):
 
     }
     previous_command = ''
-
+    last_ping = time.time()
     while True:
         logging.info('in motor control thread')
         command = q_in.get()
         logging.info(command)
-        if command != previous_command:
-
+        if command == "ping":
+            last_ping = time.time()
+        elif command != previous_command:
             commands[str(command)[:-1]]()
             previous_command = command
+        if time.time() - last_ping > 5:
+            connection_alive = False
 
 motor_control = Thread(target=motor_control_thread, args=(q_motor_control,),daemon=True)
 motor_control.start()
 
 def main_robot_control(q_out):
+    global connection_alive
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # bind the socket to a public host, and a well-known port
     logging.info(get_ip())
@@ -104,7 +112,15 @@ def main_robot_control(q_out):
 
         message = c.recv(1024)
         # message = 'Got connection from {}'.format(addr)
+        if connection_alive is False:
+            if proc_id is not None:
+                proc_id.kill()
+                proc_id = None
         if message == b'connection request':
+            if connection_alive:
+                c.send(b'connection already in use')
+                continue
+            connection_alive = True
             if proc_id is not None:
                 proc_id.kill()
                 time.sleep(2)

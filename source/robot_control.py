@@ -233,6 +233,7 @@ false_frames = 0
 file_open = False
 auto_pilot = AutoSteer()
 
+last_ping = time.time()
 
 while True:
 
@@ -282,6 +283,9 @@ while True:
         if not any_control_key_pressed:
             command = send_command(current_robot,'all_stop')
 
+    if time.time() - last_ping > 3:
+        command = send_command(current_robot, "ping")
+        last_ping = time.time()
 
     with frame_lock:
         if current_frame is not None:
