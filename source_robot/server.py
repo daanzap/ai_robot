@@ -87,7 +87,9 @@ def motor_control_thread(q_in):
     last_ping = time.time()
     while True:
         logging.info('in motor control thread')
-        command = q_in.get()
+        command = q_in.get(timeout=3)
+        if command is None:
+            continue
         logging.info(command)
         if time.time() - last_ping > 20:
             connection_alive = False
