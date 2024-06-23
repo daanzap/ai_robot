@@ -7,7 +7,6 @@ After=network-online.target
 ExecStart=/home/daan/ai_robot/venv/bin/python3 /home/daan/ai_robot/source_robot/server.py
 StandardOutput=inherit
 StandardInput=inherit
-User=daan
 Restart=always
 RestartSec=3
 
