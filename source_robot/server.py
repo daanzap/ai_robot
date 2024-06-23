@@ -6,6 +6,7 @@ import time
 from queue import Queue
 from threading import Thread
 import subprocess
+import sys
 
 
 from robot_motor_control import MotorControl
@@ -17,7 +18,7 @@ import logging
 LOG_LEVEL = logging.INFO
 LOG_FILE = "/var/log/ai_robot"
 LOG_FORMAT = "%(asctime)s %(levelname)s %(message)s"
-logging.basicConfig(filename=LOG_FILE, format=LOG_FORMAT, level=LOG_LEVEL)
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
 logging.info('starting ai robot server')
 
