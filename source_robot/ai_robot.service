@@ -4,7 +4,7 @@ Wants=network-online.target
 After=network-online.target
 
 [Service]
-ExecStart=/usr/bin/python3 /home/pi/ai_robot/source_robot/server.py
+ExecStart=/home/daan/ai_robot/venv/bin/python3 /home/daan/ai_robot/source_robot/server.py
 StandardOutput=inherit
 StandardInput=inherit
 User=pi
