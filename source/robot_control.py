@@ -21,7 +21,7 @@ pygame.init()
 display_width = 640
 display_height = 480
 screen = pygame.display.set_mode((display_width, display_height))
-pygame.display.set_caption('Remote Webcam Viewer')
+pygame.display.set_caption('Ai robot control')
 font = pygame.font.SysFont("Arial", 14)
 # clock = pygame.time.Clock()
 timer = 0
