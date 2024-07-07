@@ -8,13 +8,21 @@ from tensorflow.keras.saving import load_model
 class AutoSteer(object):
     ################## Keras deeplearning implementation ###################################
     def __init__(self):
-        self.model_path = os.path.join('..', 'models', 'robot_model.keras')
-        self.model = load_model(self.model_path)
+        try:
+            self.model_path = os.path.join('..', 'models', 'robot_model.keras')
+            self.model = load_model(self.model_path)
+            self.model_loaded = True
+        except Exception as e:
+            print(e)
+            self.model_loaded = False
+
 
     def reload(self):
         self.model = load_model(self.model_path)
 
     def steer(self,view):
+        if not self.model_loaded:
+            return 'forward'
         width = 64
         height = 64
         dim = (width, height)
