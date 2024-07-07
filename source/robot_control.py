@@ -305,7 +305,6 @@ while True:
         dim = (width, height)
         resized = cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
         if recording:
-            print('recording')
             cv2.circle(image, (30,30), 4, (255,0,0),thickness=-1)
             size_array = dim[0]*dim[1]*3 # width height time 3 channels
             image_data = resized.reshape(1,size_array)
