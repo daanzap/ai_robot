@@ -144,7 +144,7 @@ def main_robot_control(q_out):
                      "h264", "--inline", "-o","--listen", "udp://{}:5555".format(addr[0])], stdout=sys.stdout, stderr=sys.stderr)
                 # proc_id = subprocess.Popen(["rpicam-vid","-t","0","--framerate","15","--width","640","--height","480","--codec","h264","--inline","--listen","-o","tcp://0.0.0.0:5555".format(addr[0])])
 
-            time.sleep(2)
+
             print("conection to {} established".format(addr[0]))
             c.send('connection ok'.encode('utf-8'))
         if message.startswith(b'robot_command'):
