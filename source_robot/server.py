@@ -93,9 +93,6 @@ def motor_control_thread(q_in):
         try:
             command = q_in.get(timeout=3)
         except queue.Empty:
-            if int(time.time()) - last_ping > 20:
-                print("connection closed")
-                connection_alive = False
             continue
 
         last_ping = int(time.time())
