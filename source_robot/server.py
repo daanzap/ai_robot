@@ -123,10 +123,7 @@ def main_robot_control(q_out):
 
         message = c.recv(1024)
         # message = 'Got connection from {}'.format(addr)
-        if connection_alive is False:
-            if proc_id is not None:
-                proc_id.kill()
-                proc_id = None
+
         if message == b'connection request':
             if connection_alive:
                 c.send(b'connection already in use')
