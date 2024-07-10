@@ -194,7 +194,7 @@ def frame_grabber():
         print(str(e))
     time.sleep(2)
     while True:
-
+        cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
         local_current_frame = cap.read()
         with frame_lock:
             if local_current_frame is not None:

@@ -93,6 +93,8 @@ def motor_control_thread(q_in):
         try:
             command = q_in.get(timeout=3)
         except queue.Empty:
+            if time.time() - last_ping > 20:
+                connection_alive = False
             continue
 
         last_ping = int(time.time())
@@ -105,10 +107,10 @@ def motor_control_thread(q_in):
 
 
 motor_control = Thread(target=motor_control_thread, args=(q_motor_control,), daemon=True)
-motor_control.start()
 
 
 def main_robot_control(q_out):
+    global motor_control
     global connection_alive
     serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     # bind the socket to a public host, and a well-known port
@@ -128,10 +130,15 @@ def main_robot_control(q_out):
                 c.send(b'connection already in use')
                 continue
             connection_alive = True
+            if not motor_control.is_alive():
+                motor_control.start()
+
             if proc_id is not None:
                 # proc_id.kill()
                 time.sleep(2)
             else:
+
+
                 # proc_id = subprocess.Popen(["raspivid","-v","-w","640", "-h", "480", "-fps","30","-n","-t", "0", "-l", "-o","tcp://0.0.0.0:5001","-fl"])
                 command = ["rpicam-vid", "-t", "0", "--framerate", "15", "--width", "640", "--height", "480", "--codec",
                      "h264", "--inline", "-o", "udp://{}:5555".format(addr[0])]
