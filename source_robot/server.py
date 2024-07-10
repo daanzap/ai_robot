@@ -87,18 +87,18 @@ def motor_control_thread(q_in):
 
     }
     previous_command = ''
-    last_ping = time.time()
+    last_ping = int(time.time())
     while True:
         logging.info('in motor control thread')
         try:
             command = q_in.get(timeout=3)
         except queue.Empty:
-            if time.time() - last_ping > 20:
+            if int(time.time()) - last_ping > 20:
                 print("connection closed")
                 connection_alive = False
             continue
 
-        last_ping = time.time()
+        last_ping = int(time.time())
         if str(command)[:-1] == "ping":
             logging.info("ping registered")
             continue
