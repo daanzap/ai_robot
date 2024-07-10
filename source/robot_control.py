@@ -185,7 +185,7 @@ def frame_grabber():
         # cap = cv2.VideoCapture("tcp://192.168.178.25:5001/")
         cap = cv2.VideoCapture()
         cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
-        cap.set(cv2.CAP_PROP_FPS, 25)
+        cap.set(cv2.CAP_PROP_FPS, 50)
         cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
         cap.open("udp://{}:5555/".format(ip))
 
@@ -194,7 +194,6 @@ def frame_grabber():
         print(str(e))
     time.sleep(2)
     while True:
-        cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
         local_current_frame = cap.read()
         with frame_lock:
             if local_current_frame is not None:

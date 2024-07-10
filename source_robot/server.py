@@ -140,7 +140,7 @@ def main_robot_control(q_out):
 
 
                 # proc_id = subprocess.Popen(["raspivid","-v","-w","640", "-h", "480", "-fps","30","-n","-t", "0", "-l", "-o","tcp://0.0.0.0:5001","-fl"])
-                command = ["rpicam-vid", "-t", "0", "--framerate", "15", "--width", "640", "--height", "480", "--codec",
+                command = ["rpicam-vid", "-t", "0", "--framerate", "30", "--width", "640", "--height", "480", "--codec",
                      "h264", "--inline", "-o", "udp://{}:5555".format(addr[0])]
                 print(' '.join(command))
                 proc_id = subprocess.Popen(command, stdout=sys.stdout, stderr=sys.stderr)
