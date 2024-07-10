@@ -91,7 +91,7 @@ def motor_control_thread(q_in):
     while True:
         logging.info('in motor control thread')
         try:
-            command = q_in.get()
+            command = q_in.get(timeout=3)
         except queue.Empty:
             if time.time() - last_ping > 20:
                 print("connection closed")
