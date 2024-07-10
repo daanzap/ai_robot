@@ -28,7 +28,8 @@ class AutoSteer(object):
         dim = (width, height)
         resized = cv2.resize(view, dim, interpolation=cv2.INTER_AREA)
         camera_view_reduced = np.array([resized.astype('float32') / 255 ])
-        prediction = self.model.predict_classes(camera_view_reduced)[0]
+        prediction = self.model.predict(camera_view_reduced)
+        prediction = prediction.argmax(axis=-1)
         print(prediction)
         if prediction == 0:
             return 'forward'

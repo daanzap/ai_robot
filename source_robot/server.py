@@ -137,7 +137,8 @@ def main_robot_control(q_out):
                 time.sleep(2)
             #proc_id = subprocess.Popen(["raspivid","-v","-w","640", "-h", "480", "-fps","30","-n","-t", "0", "-l", "-o","tcp://0.0.0.0:5001","-fl"])
             print(' '.join(["libcamera-vid","-t","0","--framerate","20","--width","640","--height","480","--codec","h264","--inline","-o","udp://{}:5555".format(addr[0])]))
-            proc_id = subprocess.Popen(["libcamera-vid","-t","0","--framerate","20","--width","640","--height","480","--codec","h264","--inline","-o","udp://{}:5555".format(addr[0])])
+            #proc_id = subprocess.Popen(["libcamera-vid","-t","0","--framerate","20","--width","640","--height","480","--codec","h264","--inline","-o","tcp://{}:5555".format(addr[0])])
+            proc_id = subprocess.Popen(["rpicam-vid","-t","0","--framerate","15","--width","640","--height","480","--codec","h264","--inline","--listen","-o","tcp://0.0.0.0:5555".format(addr[0])])
 
             time.sleep(2)
             print("conection to {} established".format(addr[0]))
