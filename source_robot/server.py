@@ -1,4 +1,4 @@
-#serversend.py
+# serversend.py
 import json
 import queue
 import socket
@@ -7,7 +7,6 @@ from queue import Queue
 from threading import Thread
 import subprocess
 import sys
-
 
 from robot_motor_control import MotorControl
 
@@ -23,6 +22,8 @@ logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 logging.info('starting ai robot server')
 
 connection_alive = False
+
+
 # raspivid -v -w 640 -h 480 -fps 30 -n -t 0 -l -o tcp://0.0.0.0:5001
 def get_ip():
     number_of_tries = 40
@@ -51,7 +52,7 @@ def broadcast_info():
     msg = {
         'name': robot_name,
         'hostname': host_name,
-        'ip':get_ip()
+        'ip': get_ip()
     }
     msg = json.dumps(msg).encode('utf-8')
     dest = ('<broadcast>', 10100)
@@ -65,12 +66,13 @@ def broadcast_info():
             s.setblocking(0)
             s.sendto(msg, dest)
 
+
 broadcast_server = Thread(target=broadcast_info, daemon=True)
 broadcast_server.start()
 
-
 q = Queue()
 q_motor_control = Queue()
+
 
 def motor_control_thread(q_in):
     global connection_alive
@@ -82,7 +84,6 @@ def motor_control_thread(q_in):
         'turn_right': motor.turn_right,
         'backward': motor.backward,
         'all_stop': motor.all_stop
-
 
     }
     previous_command = ''
@@ -96,7 +97,6 @@ def motor_control_thread(q_in):
                 connection_alive = False
             continue
 
-
         last_ping = time.time()
         if str(command)[:-1] == "ping":
             logging.info("ping registered")
@@ -106,8 +106,9 @@ def motor_control_thread(q_in):
             previous_command = command
 
 
-motor_control = Thread(target=motor_control_thread, args=(q_motor_control,),daemon=True)
+motor_control = Thread(target=motor_control_thread, args=(q_motor_control,), daemon=True)
 motor_control.start()
+
 
 def main_robot_control(q_out):
     global connection_alive
@@ -130,13 +131,17 @@ def main_robot_control(q_out):
                 continue
             connection_alive = True
             if proc_id is not None:
-                #proc_id.kill()
+                # proc_id.kill()
                 time.sleep(2)
             else:
-                #proc_id = subprocess.Popen(["raspivid","-v","-w","640", "-h", "480", "-fps","30","-n","-t", "0", "-l", "-o","tcp://0.0.0.0:5001","-fl"])
-                print(' '.join(["rpicam-vid","-t","0","--framerate","20","--width","640","--height","480","--codec","h264","--inline","-o","udp://{}:5555".format(addr[0])]))
-                proc_id = subprocess.Popen(["rpicam-vid","-t","0","--framerate","20","--width","640","--height","480","--codec","h264","--inline","-o","tcp://{}:5555".format(addr[0])])
-                #proc_id = subprocess.Popen(["rpicam-vid","-t","0","--framerate","15","--width","640","--height","480","--codec","h264","--inline","--listen","-o","tcp://0.0.0.0:5555".format(addr[0])])
+                # proc_id = subprocess.Popen(["raspivid","-v","-w","640", "-h", "480", "-fps","30","-n","-t", "0", "-l", "-o","tcp://0.0.0.0:5001","-fl"])
+                print(' '.join(
+                    ["rpicam-vid", "-t", "0", "--framerate", "20", "--width", "640", "--height", "480", "--codec",
+                     "h264", "--inline", "-o", "udp://{}:5555".format(addr[0])]))
+                proc_id = subprocess.Popen(
+                    ["rpicam-vid", "-t", "0", "--framerate", "20", "--width", "640", "--height", "480", "--codec",
+                     "h264", "--inline", "-o", "tcp://{}:5555".format(addr[0])], stdout=sys.stdout, stderr=sys.stderr)
+                # proc_id = subprocess.Popen(["rpicam-vid","-t","0","--framerate","15","--width","640","--height","480","--codec","h264","--inline","--listen","-o","tcp://0.0.0.0:5555".format(addr[0])])
 
             time.sleep(2)
             print("conection to {} established".format(addr[0]))
@@ -144,7 +149,6 @@ def main_robot_control(q_out):
         if message.startswith(b'robot_command'):
             command = str(message).split(':')
             q_out.put(command[1])
-
 
 
 main_server = Thread(target=main_robot_control, args=(q_motor_control,), daemon=True)

@@ -186,6 +186,7 @@ def frame_grabber():
         cap = cv2.VideoCapture()
         cap.set(cv2.CAP_PROP_BUFFERSIZE, 0)
         cap.set(cv2.CAP_PROP_FPS, 25)
+        cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
         cap.open("udp://{}:5555/".format(ip))
 
     except Exception as e:
@@ -193,7 +194,7 @@ def frame_grabber():
     time.sleep(2)
     while True:
         time.sleep(0.015)
-        # cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
+        #
         local_current_frame = cap.read()
         with frame_lock:
             if local_current_frame is not None:
