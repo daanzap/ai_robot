@@ -268,6 +268,9 @@ while True:
         command = send_command(current_robot, auto_pilot.steer(frame))
         print(command)
     else:
+        if keys[pygame.K_UP] or get_joysitck_input(1) < -0.5 and not turning:
+            any_control_key_pressed = True
+            command = send_command(current_robot,'forward')
         if keys[pygame.K_LEFT] or get_joysitck_input(0) < -0.5:
             any_control_key_pressed = True
             turning = True
@@ -277,9 +280,7 @@ while True:
             any_control_key_pressed = True
             turning = True
             command = send_command(current_robot,'turn_right')
-        if keys[pygame.K_UP] or get_joysitck_input(1) < -0.5 and not turning:
-            any_control_key_pressed = True
-            command = send_command(current_robot,'forward')
+
         if keys[pygame.K_DOWN] or get_joysitck_input(1) > 0.5 and not turning:
             any_control_key_pressed = True
             command = send_command(current_robot,'backward')
