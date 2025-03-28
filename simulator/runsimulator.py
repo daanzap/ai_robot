@@ -15,7 +15,7 @@ from strategies.auto_pilot import AutoSteer
 pygame.init()
 
 display_width = 1100
-display_height = 900
+display_height = 700
 bounding_box_x = display_width - 400
 bounding_box_y = display_height - 400
 
