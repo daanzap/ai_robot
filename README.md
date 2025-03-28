@@ -56,6 +56,10 @@ geavanceerd -> VPC
 
 settings robot
 
+sudo sysctl net.ipv4.ip_forward=1
+sudo iptables -F
+sudo iptables -A FORWARD -i wlp3s0 -o enp6s0 -m state --state RELATED,ESTABLISHED -j ACCEPT
+sudo ufw disable
 
 
 
